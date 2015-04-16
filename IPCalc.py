@@ -10,9 +10,10 @@ class IPrange:
 		self.address = address
 		self.cidr = cidr
 		self.addrlist = self.address.split(".")
+
 	def __repr__(self):
 		print "Program started!"
-		print "Calculating the IP Range of %s/%s" % (self.address,self.cidr)
+		print "Calculation of IPRange for %s/%s has been successfully completed" % (self.address,self.cidr)
 
 	def MASK(self):
 		mask = [0,0,0,0]
@@ -63,13 +64,26 @@ class IPrange:
 def IPCalc(IP_MASK):
 	if "/" in IP_MASK:
 		address, cidr = IP_MASK.split("/")
+		try:
+			valid = address.split(".")
+		except:
+			print "[-] Please, Specify a valid IP address"
+			return
+		if len(valid) != 4:
+			print "[-] Please, Specify a valid IP address"
+			return
+		if int(cidr) > 32 or int(cidr) < 0:
+			print "[-] You have specified an invalid MASK"
+			print "[!] Only values from 1 - 32 are allowed"
+			return
 		obj = IPrange(address, cidr)
 		obj.__repr__()
-		print "NETWORK ID:", ".".join( [ str(octet) for octet in obj.NETWORK()])
-		print "NET MASK:", ".".join( [ str(octet) for octet in obj.MASK()])
-		print "BROADCAST:", ".".join( [ str(octet) for octet in obj.BROADCAST()])
-		print "First IP:", ".".join( [ str(octet) for octet in obj.FIRST_ADDR()])
-		print "LAST IP:", ".".join( [ str(octet) for octet in obj.LAST_ADDR()])
-		
+		NETWORK  = ".".join( [ str(octet) for octet in obj.NETWORK()])
+		MASK     = ".".join( [ str(octet) for octet in obj.MASK()])
+		BROADCAST=".".join( [ str(octet) for octet in obj.BROADCAST()])
+		FIRST_IP =".".join( [ str(octet) for octet in obj.FIRST_ADDR()])
+		LAST_IP=".".join( [ str(octet) for octet in obj.LAST_ADDR()])
+		return NETWORK,MASK,BROADCAST,FIRST_IP, LAST_IP
 	else:
-		print "Please specify a CIDR Network --> 172.16.122.2/22"
+		print "Please, Specify a valid CIDR Network -- 172.16.122.2/22"
+		
